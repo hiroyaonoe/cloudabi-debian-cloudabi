@@ -5,8 +5,8 @@ ENV PATH "/root/.cargo/bin:${PATH}"
 RUN apt-get update
 RUN apt-get dist-upgrade -y
 RUN apt-get install -y \
-        apt-transport-https build-essential clang cmake curl git \
-        libjsoncpp-dev libyaml-cpp-dev lld pkg-config python3 python3-pip \
+        apt-transport-https build-essential clang-16 cmake curl git \
+        libjsoncpp-dev libyaml-cpp-dev lld-16 pkg-config python3 python3-pip \
         wget
 RUN pip3 install --break-system-packages pypeg2 toposort
 
@@ -14,12 +14,12 @@ RUN for target in aarch64-unknown-cloudabi armv6-unknown-cloudabi-eabihf \
                   armv7-unknown-cloudabi-eabihf i686-unknown-cloudabi \
                   x86_64-unknown-cloudabi; do \
       for tool in ar nm objdump ranlib size; do \
-        ln -s ../lib/llvm-7/bin/llvm-${tool} /usr/bin/${target}-${tool}; \
+        ln -s ../lib/llvm-16/bin/llvm-${tool} /usr/bin/${target}-${tool}; \
       done && \
-      ln -s ../lib/llvm-7/bin/clang /usr/bin/${target}-cc && \
-      ln -s ../lib/llvm-7/bin/clang /usr/bin/${target}-c++ && \
-      ln -s ../lib/llvm-7/bin/lld /usr/bin/${target}-ld && \
-      ln -s ../../${target} /usr/lib/llvm-7/${target}; \
+      ln -s ../lib/llvm-16/bin/clang /usr/bin/${target}-cc && \
+      ln -s ../lib/llvm-16/bin/clang /usr/bin/${target}-c++ && \
+      ln -s ../lib/llvm-16/bin/lld /usr/bin/${target}-ld && \
+      ln -s ../../${target} /usr/lib/llvm-16/${target}; \
     done
 
 RUN echo deb https://nuxi.nl/distfiles/cloudabi-ports/debian/ cloudabi cloudabi > /etc/apt/sources.list.d/cloudabi.list && \

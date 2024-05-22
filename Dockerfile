@@ -22,6 +22,11 @@ RUN for target in aarch64-unknown-cloudabi armv6-unknown-cloudabi-eabihf \
       ln -s ../../${target} /usr/lib/llvm-7/${target}; \
     done
 
+RUN wget https://github.com/bazelbuild/bazel/releases/download/0.21.0/bazel-0.21.0-installer-linux-x86_64.sh
+RUN chmod +x bazel-0.21.0-installer-linux-x86_64.sh
+RUN ./bazel-0.21.0-installer-linux-x86_64.sh
+RUN bazel version
+
 RUN echo deb https://nuxi.nl/distfiles/cloudabi-ports/debian/ cloudabi cloudabi > /etc/apt/sources.list.d/cloudabi.list && \
     wget -qO - 'https://pgp.mit.edu/pks/lookup?op=get&search=0x0DA51B8531344B15' | apt-key add - && \
     apt-get update && \

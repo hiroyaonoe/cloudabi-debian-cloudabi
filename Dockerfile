@@ -1,4 +1,4 @@
-FROM debian:testing
+FROM ubuntu:18.04
 
 ENV PATH "/root/.cargo/bin:${PATH}"
 

@@ -5,10 +5,10 @@ ENV PATH "/root/.cargo/bin:${PATH}"
 RUN apt-get update
 RUN apt-get dist-upgrade -y
 RUN apt-get install -y \
-        apt-transport-https build-essential clang cmake curl git \
-        libjsoncpp-dev libyaml-cpp-dev lld pkg-config python3 python3-pip \
+        apt-transport-https build-essential clang-7 cmake curl git \
+        libjsoncpp-dev libyaml-cpp-dev lld-7 pkg-config python3 python3-pip \
         wget
-RUN pip3 install --break-system-packages pypeg2 toposort
+RUN pip3 install pypeg2 toposort
 
 RUN for target in aarch64-unknown-cloudabi armv6-unknown-cloudabi-eabihf \
                   armv7-unknown-cloudabi-eabihf i686-unknown-cloudabi \
@@ -22,15 +22,14 @@ RUN for target in aarch64-unknown-cloudabi armv6-unknown-cloudabi-eabihf \
       ln -s ../../${target} /usr/lib/llvm-7/${target}; \
     done
 
-RUN wget https://github.com/bazelbuild/bazel/releases/download/0.21.0/bazel-0.21.0-installer-linux-x86_64.sh
-RUN chmod +x bazel-0.21.0-installer-linux-x86_64.sh
-RUN ./bazel-0.21.0-installer-linux-x86_64.sh
-RUN bazel version
+RUN ln -s ../lib/llvm-7/bin/clang /usr/bin/clang && \
+    ln -s ../lib/llvm-7/bin/clang /usr/bin/clang++
 
-RUN echo deb https://nuxi.nl/distfiles/cloudabi-ports/debian/ cloudabi cloudabi > /etc/apt/sources.list.d/cloudabi.list && \
-    wget -qO - 'https://pgp.mit.edu/pks/lookup?op=get&search=0x0DA51B8531344B15' | apt-key add - && \
-    apt-get update && \
-    apt-get install -y x86-64-unknown-cloudabi-cxx-runtime
+RUN git clone https://github.com/hiroyaonoe/cloudabi-ports.git && \
+    cd cloudabi-ports && \
+    python3 build_packages.py && \
+    cd .. && \
+    rm -Rf cloudabi-ports/
 
 RUN git clone https://github.com/NuxiNL/argdata.git && \
     cd argdata && \

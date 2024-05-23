@@ -1,10 +1,12 @@
-FROM ubuntu:18.04
+FROM debian:wheezy
 
 ENV PATH "/root/.cargo/bin:${PATH}"
 
+RUN echo "deb http://archive.debian.org/debian/ stretch main" > /etc/apt/sources.list && \
+    echo "deb http://archive.debian.org/debian-security stretch/updates main" >> /etc/apt/sources.list
 RUN apt-get update
-RUN apt-get dist-upgrade -y
-RUN apt-get install -y \
+RUN apt-get dist-upgrade -y --force-yes
+RUN apt-get install -y --allow-unauthenticated\
         apt-transport-https build-essential clang-7 cmake curl git \
         libjsoncpp-dev libyaml-cpp-dev lld-7 pkg-config python3 python3-pip \
         wget
